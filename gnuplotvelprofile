@@ -1,0 +1,28 @@
+set term epslatex size 3.25in,3.25in font ",8" standalone size 3.5,3.5
+#set font ",6"
+#set key spacing 1.25 #set for the large font legend
+set output 'velprofile.tex'
+set size ratio 1.0
+set datafile sep comma
+set xrange [0:]
+set yrange[0:]
+set xlabel '\huge $y$ m' 
+set ylabel '\tiny $U$ m/s' 
+#set tics font ",8"
+#set key font ",6"
+
+plot for [j=0:100:20] sprintf("%dvel.csv",j) u "Points:1":"U:0" w l smooth csplines lw 3 t sprintf("\\normalsize \$t\$=%d",j)
+replot
+set output
+system('latex velprofile.tex')
+system('dvips velprofile.dvi')
+system('ps2pdf velprofile.ps')
+system('evince velprofile.pdf')
+
+
+system('rm -rf *.aux')
+system('rm -rf *.log')
+system('rm -rf *-inc.eps')
+system('rm -rf *.tex')
+#rm -rf *-inc.pdf
+system('pdftoppm velprofile.pdf velprofile -png')
