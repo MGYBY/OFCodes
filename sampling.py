@@ -1,3 +1,4 @@
+outputpersec=1
 try: paraview.simple
 except: from paraview.simple import *
 paraview.simple._DisableFirstRenderCameraReset()
@@ -20,7 +21,7 @@ PlotOverLine1.Source.Point2 = [xx/2, yy, 0.1]
 source = PlotOverLine1
 
 #for TimeStepNum in range(0,len(tsteps)):
-for TimeStepNum in range(0,100,20):
+for TimeStepNum in range(0,120*outputpersec,20*outputpersec):
     view = GetActiveView()
     view.ViewTime = tsteps[TimeStepNum]
     Render()
