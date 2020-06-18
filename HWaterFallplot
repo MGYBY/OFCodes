@@ -1,29 +1,32 @@
-
-set term epslatex size 3.25in,3.25in font ",8" standalone size 3.5,3.5
+#set term wxt
+set term epslatex standalone color colortext font ',8' size 3.75in,3.75in
 #set font ",6"
 #set key spacing 1.25 #set for the large font legend
-set output 'velprofile.tex'
+set output 'waterFallPlot.tex'
 set size ratio 1.0
 set datafile sep comma # csv files
-set xrange [0:]
-set yrange[0:]
-set zrange[]
+#load '~/Documents/codes_git/gnuplot-palettes/moreland.pal'
+#set style fill solid 0.0 border
+#color(x) = x>180?360-x:x
+#filenum = 0
+set xrange [0:];
+set yrange [0:];
+#plot for [j=0:26:2] sprintf("%dsur0.csv",j) u "Points:0":(j*0.05+column("Points:1")) w l lw 3 sm uni notitle
+plot sprintf("%dsur0.csv",0) u "Points:0":(column("Points:1")) w l lw 3 sm uni notitle
+set xlabel '$x$ m'
+set ylabel '$h$ m'
 
-
-splot for [j=0:5:1] sprintf("< sort -nk9 %jsur0.csv",j) u 9:(j):10 trianglepattern 2  
-
-
-replot
 set output
-system('latex velprofile.tex')
-system('dvips velprofile.dvi')
-system('ps2pdf velprofile.ps')
-system('evince velprofile.pdf')
+
+system('latex waterFallPlot.tex')
+system('dvips waterFallPlot.dvi')
+system('ps2pdf waterFallPlot.ps')
+system('evince waterFallPlot.pdf')
 
 
-system('rm -rf *.aux')
-system('rm -rf *.log')
-system('rm -rf *-inc.eps')
-system('rm -rf *.tex')
+#system('rm -rf *.aux')
+#system('rm -rf *.log')
+#system('rm -rf *-inc.eps')
+#system('rm -rf *.tex')
 #rm -rf *-inc.pdf
-system('pdftoppm velprofile.pdf velprofile -png')
+system('pdftoppm waterFallPlot.pdf waterFallPlot -png')

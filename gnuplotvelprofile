@@ -1,11 +1,11 @@
-set term epslatex size 3.25in,3.25in font ",8" standalone size 3.5,3.5
+set term epslatex size 3.25in,3.25in font ",8" standalone #size 3.5,3.5
 #set font ",6"
 #set key spacing 1.25 #set for the large font legend
 set output 'velprofile.tex'
 set size ratio 1.0
 set datafile sep comma
 set xrange [0:]
-set yrange[0:]
+set yrange [0:]
 set xlabel '\huge $y$ m' 
 set ylabel '\tiny $U$ m/s' 
 #set tics font ",8"
