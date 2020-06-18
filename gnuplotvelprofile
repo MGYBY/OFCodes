@@ -5,7 +5,7 @@ set output 'velprofile.tex'
 set size ratio 1.0
 set datafile sep comma
 set xrange [0:]
-set yrange [0:]
+set yrange [0:] 
 set xlabel '\huge $y$ m' 
 set ylabel '\tiny $U$ m/s' 
 #set tics font ",8"
