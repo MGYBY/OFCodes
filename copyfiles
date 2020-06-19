@@ -2,6 +2,6 @@
 for f in $(seq 0 10 100) 
 do
 	h="${f}sur0.csv"
-	cp $h /media/boyuan/DEEPINOS/619data/U75twoperiods
+	cp $h /media/boyuan/DEEPINOS/619data/U75twoperiods 
 done
 	
