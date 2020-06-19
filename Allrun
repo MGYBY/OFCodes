@@ -1,0 +1,44 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+fraction=1.0 
+discharge=5.0
+disturbancefraction=0.05
+Uh=7.50
+waterdepth=`python -c "print($discharge/$Uh)"`
+xx=`python -c "print($waterdepth*4*25)"`
+disperiod=3
+segment=`python -c "print($xx/$disperiod/4)"`
+
+runApplication blockMesh
+funkySetFields -field alpha.water -expression "0" -time 0 -keepPatches
+funkySetFields -field U  -expression "vector(0,0,0)" -time 0 -keepPatches 
+#runApplication setFields
+disU=`python -c "print($Uh*(1-$disturbancefraction))"`
+disH=`python -c "print($discharge/$disU)"`
+funkySetFields -field alpha.water -expression "$fraction" -time 0 -keepPatches -condition "pos().x<$segment&&pos().y<$disH&&pos().x>0"
+funkySetFields -field U  -expression "vector($disU,0,0)" -time 0 -keepPatches -condition "pos().x<$segment&&pos().y<$disH&&pos().x>0"
+
+
+#disU=`python -c "print($Uh*(1-$disturbancefraction))"`
+disH=`python -c "print($discharge/$disU)"`
+funkySetFields -field alpha.water -expression "$fraction" -time 0 -keepPatches -condition "pos().x>($segment*(4*$disperiod-1))&&pos().x<($segment*(4*$disperiod))&&pos().y<$disH"
+funkySetFields -field U  -expression "vector($disU,0,0)" -time 0 -keepPatches -condition "pos().x>($segment*(4*$disperiod-1))&&pos().x<($segment*(4*$disperiod))&&pos().y<$disH"
+
+looplimit=`python -c "print($disperiod*4-1-2)"`
+ for num in $(seq 1 2 $looplimit)
+ do
+   disU=`python -c "print($Uh*(1-((1 if ($num-1)/2%2 else -1))*$disturbancefraction))"`
+   disH=`python -c "print($discharge/$disU)"`
+   funkySetFields -field alpha.water -expression "$fraction" -time 0 -keepPatches -condition "pos().x>($segment*($num))&&pos().x<($segment*($num+2))&&pos().y<$disH"
+   funkySetFields -field U -expression "vector($disU,0,0)" -time 0 -keepPatches -condition "pos().x>($segment*($num))&&pos().x<($segment*($num+2))&&pos().y<$disH"
+ done
+
+runApplication $application
+
+#------------------------------------------------------------------------------
